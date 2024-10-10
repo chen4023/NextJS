@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function FavoriteButton({ animalId }) {
@@ -6,6 +7,7 @@ export default function FavoriteButton({ animalId }) {
   const [favorite, setFavorite] = useState([]);
   // 버튼 상태를 결정할 상태
   const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
   console.log(favorite);
 
   useEffect(() => {
@@ -21,7 +23,10 @@ export default function FavoriteButton({ animalId }) {
   const handler = () => {
     const method = isFavorite ? "DELETE" : "POST";
     fetch(`http://localhost:3000/api/favorite/${animalId}`, { method }).then(
-      (res) => setIsFavorite((prev) => !prev)
+      (res) => {
+        setIsFavorite((prev) => !prev);
+        router.refresh();
+      }
     );
   };
   return <button onClick={handler}>{isFavorite ? "💚" : "🩶"}</button>;
